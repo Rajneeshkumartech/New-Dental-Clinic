@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Dental Clinic</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .nav-link:hover {
+            color: #10b981; /* Tailwind emerald-500 */
+        }
+        /* Custom styles for professional aesthetics */
+        .shadow-custom {
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1), 0 2px 4px -1px rgba(16, 185, 129, 0.06);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-green': '#10b981', // emerald-500
+                        'secondary-blue': '#3b82f6', // blue-500
+                        'dark-text': '#1f2937', // gray-800
+                    },
+                }
+            }
+        }
+
+        const translations = {
+            // --- Navigation and General ---
+            'nav-services': { en: 'Services', hi: 'सेवाएँ', bho: 'सेवा सभ' },
+            'nav-about': { en: 'About Us', hi: 'हमारे बारे में', bho: 'हमरा बारे में' },
+            'nav-gallery': { en: 'Gallery', hi: 'गैलरी', bho: 'गैलरी' },
+            'nav-testimonials': { en: 'Testimonials', hi: 'प्रशंसापत्र', bho: 'तारीफ' },
+            'nav-contact': { en: 'Contact', hi: 'संपर्क करें', bho: 'सम्पर्क करीं' },
+            'nav-book': { en: 'Book Now', hi: 'अभी बुक करें', bho: 'एहिजे बुक करीं' },
+            'doctor-name': { en: 'Dr. Ajit , DDS', hi: 'डॉ. एलारा वेंस, डी.डी.एस.', bho: 'डॉ. एलारा वेंस, डी.डी.एस.' },
+            'doctor-role': { en: 'Lead Dentist & Founder', hi: 'मुख्य दंत चिकित्सक और संस्थापक', bho: 'मुख्य डाँत के डाक्टर आ संस्थापक' },
+            
+            // --- Hero Section ---
+            'hero-h1': { en: 'Your Journey to a ', hi: 'एक ', bho: 'एक ' },
+            'hero-h1-span': { en: 'Brighter Smile', hi: 'उज्जवल मुस्कान', bho: 'चमकीला मुस्कान' },
+            'hero-h1-suffix': { en: ' Starts Here.', hi: ' के लिए आपकी यात्रा यहाँ से शुरू होती है।', bho: ' खातिर राउर यात्रा एहिजा से शुरू होला।' },
+            'hero-p': { en: 'Compassionate care and advanced technology for routine check-ups, cosmetic enhancements, and restorative dentistry.', hi: 'नियमित जाँच, कॉस्मेटिक सुधार और पुनर्स्थापना दंत चिकित्सा के लिए दयालु देखभाल और उन्नत तकनीक।', bho: 'नियमित जाँच, सुंदरता बढ़ावे वाला इलाज आ बिगड़ल दाँत के ठीक करे खातिर दयालु देखभाल आ बढ़िया मशीनरी।' },
+            'hero-button': { en: 'Schedule Your First Visit', hi: 'अपनी पहली मुलाकात शेड्यूल करें', bho: 'राउर पहिला मुलाकात तय करीं' },
+
+            // --- Services Section ---
+            'services-h2': { en: 'Our Comprehensive Dental Services', hi: 'हमारी व्यापक दंत चिकित्सा सेवाएँ', bho: 'हमनी के पूरा दाँत के सेवा सभ' },
+            'services-p': { en: 'From preventative care to advanced cosmetic treatments, we cover all your family\'s oral health needs.', hi: 'निवारक देखभाल से लेकर उन्नत कॉस्मेटिक उपचारों तक, हम आपके परिवार की सभी मौखिक स्वास्थ्य जरूरतों को पूरा करते हैं।', bho: 'बचाव के देखभाल से लेके बढ़िया सुंदरता बढ़ावे वाला इलाज तक, हमनी राउर सगरी परिवार के दाँत के जरूरत पूरा करेनी जा।' },
+            'svc1-h3': { en: 'Preventative Care', hi: 'निवारक देखभाल', bho: 'बचाव के देखभाल' },
+            'svc1-p': { en: 'Regular cleanings, comprehensive exams, and fluoride treatments to keep your smile healthy.', hi: 'नियमित सफाई, व्यापक जाँच, और फ्लोराइड उपचार आपकी मुस्कान को स्वस्थ रखने के लिए।', bho: 'नियमित सफाई, बढ़िया से जाँच, आ फ्लोराइड के इलाज राउर मुस्कान के तंदुरुस्त राखे खातिर।' },
+            'svc2-h3': { en: 'Cosmetic Dentistry', hi: 'कॉस्मेटिक दंत चिकित्सा', bho: 'सुंदरता बढ़ावे वाला दाँत के इलाज' },
+            'svc2-p': { en: 'Teeth whitening, veneers, and bonding to enhance the beauty of your smile.', hi: 'आपकी मुस्कान की सुंदरता को बढ़ाने के लिए दांत सफेद करना, विनियर और बॉन्डिंग।', bho: 'दाँत के चमक, विनियर, आ बॉन्डिंग से राउर मुस्कान के सुंदरता बढ़ेला।' },
+            'svc3-h3': { en: 'Restorative Dentistry', hi: 'पुनर्स्थापना दंत चिकित्सा', bho: 'बिगड़ल दाँत के ठीक करे के इलाज' },
+            'svc3-p': { en: 'Fillings, crowns, bridges, and dental implants to restore function and appearance.', hi: 'कार्यक्षमता और रूप-रंग को बहाल करने के लिए फिलिंग, क्राउन, ब्रिज और डेंटल इम्प्लांट।', bho: 'भरल (Filling), क्राउन, ब्रिज, आ डेंटल इम्प्लांट से दाँत के काम आ रूप-रंग फेर से ठीक होखेला।' },
+            'svc4-h3': { en: 'Emergency Care', hi: 'आपातकालीन देखभाल', bho: 'अचानक के देखभाल' },
+            'svc4-p': { en: 'We offer prompt care for unexpected issues like toothaches and dental injuries.', hi: 'हम अप्रत्याशित समस्याओं जैसे दांत दर्द और दंत चोटों के लिए त्वरित देखभाल प्रदान करते हैं।', bho: 'हमनी दाँत दरद आ दाँत के चोट नियर अचानक के समस्या खातिर तुरत फुरत देखभाल देवेनी जा।' },
+            
+            // --- About Section ---
+            'about-h2': { en: 'A Practice Built on Trust and Care', hi: 'विश्वास और देखभाल पर आधारित एक अभ्यास', bho: 'बिस्वास आ देखभाल पर बनल क्लीनिक' },
+            'about-p1': { en: 'Founded by Dr. Ajit , New Dental is dedicated to creating a comfortable and fear-free dental experience for every patient. We believe in transparency, personalized treatment plans, and using the latest in dental technology.', hi: 'डॉ. एलारा वेंस द्वारा स्थापित, ब्राइट स्माइल डेंटल प्रत्येक रोगी के लिए आरामदायक और भय-मुक्त दंत अनुभव बनाने के लिए समर्पित है। हम पारदर्शिता, व्यक्तिगत उपचार योजनाओं और नवीनतम दंत प्रौद्योगिकी का उपयोग करने में विश्वास करते हैं।', bho: 'डॉ. एलारा वेंस के शुरू कइल, ब्राइट स्माइल डेंटल हर रोगी खातिर आरामदायक आ बिना डर के दाँत के अनुभव देवे खातिर लागल बा। हमनी साफ-साफ बात, हरेक रोगी खातिर अलग इलाज, आ नया दाँत के मशीनरी इस्तेमाल करे में बिस्वास करेनी जा।' },
+            'about-p2': { en: 'Dr. Vance graduated with honors from the University of Stellar Dental Medicine and has over 15 years of experience in family and cosmetic dentistry. She is committed to continuing education and adopting minimally invasive techniques to ensure the best outcomes.', hi: 'डॉ. वेंस ने स्टेलर डेंटल मेडिसिन विश्वविद्यालय से सम्मान के साथ स्नातक किया और उन्हें परिवार और कॉस्मेटिक दंत चिकित्सा में 15 से अधिक वर्षों का अनुभव है। वह बेहतरीन परिणाम सुनिश्चित करने के लिए निरंतर शिक्षा और न्यूनतम आक्रामक तकनीकों को अपनाने के लिए प्रतिबद्ध हैं।', bho: 'डॉ. वेंस स्टेलर डेंटल मेडिसिन विश्वविद्यालय से सम्मान के साथ पास भइनी आ उनकरा लगे परिवार आ कॉस्मेटिक दाँत के इलाज में 15 बरिस से बेसी के अनुभव बा। ऊ बढ़िया नतीजा खातिर पढ़ाई-लिखाई जारी रखे आ छोट-छोट तरीका से इलाज करे में लागल बाड़ी।' },
+            'about-li1': { en: 'Certified in Advanced Cosmetic Procedures', hi: 'उन्नत कॉस्मेटिक प्रक्रियाओं में प्रमाणित', bho: 'बढ़िया सुंदरता बढ़ावे वाला इलाज खातिर प्रमाणित' },
+            'about-li2': { en: 'State-of-the-Art Digital X-rays', hi: 'अत्याधुनिक डिजिटल एक्स-रे', bho: 'नया ज़माना के डिजिटल एक्स-रे' },
+            'about-li3': { en: 'Focus on Patient Comfort and Sedation Options', hi: 'रोगी के आराम और बेहोशी के विकल्पों पर ध्यान दें', bho: 'रोगी के आराम आ बेहोसी के तरीका पर ध्यान' },
+            'about-link': { en: 'Meet the Full Team', hi: 'पूरी टीम से मिलें', bho: 'पूरा टीम से मिलीं' },
+            
+            // --- Gallery Section ---
+            'gallery-h2': { en: 'Our Clinic & Results', hi: 'हमारा क्लिनिक और परिणाम', bho: 'हमनी के क्लीनिक आ नतीजा' },
+            'gallery-p': { en: 'A glimpse into our modern, clean facility and the life-changing results we achieve every day.', hi: 'हमारी आधुनिक, स्वच्छ सुविधा और हम हर दिन प्राप्त करने वाले जीवन बदलने वाले परिणामों की एक झलक।', bho: 'हमनी के आधुनिक, साफ-सुथरा जगह आ रोज मिलल जिनगी बदल देवे वाला नतीजा के एगो झलक।' },
+            'gallery-text1': { en: 'Comfortable Setting', hi: 'आरामदायक माहौल', bho: 'आरामदेह माहौल' },
+            'gallery-text2': { en: 'Advanced Technology', hi: 'उन्नत तकनीक', bho: 'बढ़िया मशीनरी' },
+            'gallery-text3': { en: 'Stunning Results', hi: 'शानदार परिणाम', bho: 'गजब के नतीजा' },
+
+            // --- Testimonials Section ---
+            // // 'testimonials-h2': { en: 'What Our Patients Say', hi: 'हमारे मरीज़ क्या कहते हैं', bho: 'हमनी के रोगी का कहतारे' },
+            // 'testimonials-p': { en: 'Your health and comfort are our top priority. Hear directly from those we\'ve helped.', hi: 'आपका स्वास्थ्य और आराम हमारी सर्वोच्च प्राथमिकता है। उन लोगों से सीधे सुनें जिनकी हमने मदद की है।', bho: 'राउर तंदुरुस्ती आ आराम हमनी के सबसे जरूरी काम बा। जिनकरा के हमनी मदद कइले बानी जा, ओनकर बात सुनीं।' },
+            // 'test1-text': { en: 'The best dental experience I\'ve ever had. Dr. Vance and her team are incredibly professional, gentle, and explained every step of my procedure.', hi: 'यह मेरा अब तक का सबसे अच्छा दंत अनुभव रहा है। डॉ. वेंस और उनकी टीम अविश्वसनीय रूप से पेशेवर हैं, कोमल हैं, और उन्होंने मेरी प्रक्रिया के हर कदम को समझाया।', bho: 'इ हमार आज तक के सबसे बढ़िया दाँत के अनुभव रहल। डॉ. वेंस आ उनकर टीम बहुत प्रोफेशनल, कोमल बानी जा, आ हमार इलाज के हर कदम समुझा दिहनी जा।' },
+            // 'test2-text': { en: 'I used to dread the dentist, but the staff here made me feel completely at ease. My new veneers look amazing—a life-changer!', hi: 'मुझे पहले डेंटिस्ट से डर लगता था, लेकिन यहां के कर्मचारियों ने मुझे पूरी तरह से सहज महसूस कराया। मेरे नए विनियर शानदार दिख रहे हैं—जीवन बदलने वाले!', bho: 'हम पहिले डाँत के डाक्टर से डरात रहीं, बाकिर एहिजा के लोग हमके एकदम आराम से महसूस करवलस। हमार नया विनियर गजब लागत बा—जिनगी बदल देवे वाला!' },
+            // 'test3-text': { en: 'Fast, friendly, and efficient emergency service. They fit me in right away and solved my issue with incredible care. Highly recommend.', hi: 'तेज, मैत्रीपूर्ण और कुशल आपातकालीन सेवा। उन्होंने मुझे तुरंत फिट कर दिया और अविश्वसनीय देखभाल के साथ मेरी समस्या का समाधान किया। अत्यधिक अनुशंसा की जाती है।', bho: 'तेज, दोस्ताना आ बढ़िया अचानक के सेवा। ऊ हमके तुरत जगह दिहनी आ गजब के देखभाल से हमार समस्या हल कइ दिहनी। बहुत बढ़िया।' },
+            
+            // --- Contact Section ---
+            'contact-h2': { en: 'Ready for Your New?', hi: 'अपनी उज्जवल मुस्कान के लिए तैयार हैं?', bho: 'राउर चमकीला मुस्कान खातिर तइयार बानी?' },
+            'contact-p': { en: 'Contact us today to schedule your consultation or routine check-up. We look forward to meeting you!', hi: 'अपने परामर्श या नियमित जांच को शेड्यूल करने के लिए आज ही हमसे संपर्क करें। हम आपसे मिलने के लिए उत्सुक हैं!', bho: 'आजुही हमनी से संपर्क करीं ताकि राउर परामर्श भा नियमित जाँच तय होखे। हमनी राउर इन्तजार करत बानी जा!' },
+            'contact-details-h3': { en: 'Clinic Details', hi: 'क्लिनिक विवरण', bho: 'क्लिनिक के पता' },
+            'form-h3': { en: 'Request an Appointment', hi: 'मुलाकात का अनुरोध करें', bho: 'मुलाकात के निहोरा करीं' },
+            'form-name-label': { en: 'Full Name', hi: 'पूरा नाम', bho: 'पूरा नाँव' },
+            'form-phone-label': { en: 'Phone Number', hi: 'फ़ोन नंबर', bho: 'फ़ोन नंबर' },
+            'form-email-label': { en: 'Email Address', hi: 'ईमेल पता', bho: 'ईमेल' },
+            'form-service-label': { en: 'Service Requested', hi: 'अनुरोधित सेवा', bho: 'मांगल गइल सेवा' },
+            'form-option-select': { en: 'Select a Service', hi: 'एक सेवा चुनें', bho: 'एगो सेवा चुनीं' },
+            'form-option-1': { en: 'Check-up & Cleaning', hi: 'जाँच और सफाई', bho: 'जाँच आ सफाई' },
+            'form-option-2': { en: 'Teeth Whitening', hi: 'दांत सफेद करना', bho: 'दाँत के चमक' },
+            'form-option-3': { en: 'Cosmetic Consultation', hi: 'कॉस्मेटिक परामर्श', bho: 'सुंदरता बढ़ावे खातिर राय' },
+            'form-option-4': { en: 'Emergency Appointment', hi: 'आपातकालीन मुलाकात', bho: 'अचानक के मुलाकात' },
+            'form-option-5': { en: 'Other Restorative', hi: 'अन्य पुनर्स्थापना', bho: 'दोसरा मरम्मत के काम' },
+            'form-notes-label': { en: 'Preferred Date/Time & Notes', hi: 'पसंदीदा तिथि/समय और नोट्स', bho: 'पसंदीदा तारीख/समय आ जानकारी' },
+            'form-notes-placeholder': { en: 'Please specify your preferred date, time, and any relevant health notes...', hi: 'कृपया अपनी पसंदीदा तिथि, समय, और कोई भी प्रासंगिक स्वास्थ्य नोट्स निर्दिष्ट करें...', bho: 'कृपा क के आपन पसंदीदा तारीख, समय, आ स्वास्थ्य के जानकारी बताईं...' },
+            'form-submit-button': { en: 'Submit Appointment Request', hi: 'मुलाकात का अनुरोध जमा करें', bho: 'मुलाकात के निहोरा जमा करीं' },
+            'form-small-text': { en: 'We will call you within 24 hours to confirm the exact time.', hi: 'हम सटीक समय की पुष्टि के लिए 24 घंटे के भीतर आपको कॉल करेंगे।', bho: 'हम 24 घंटा के भीतर रउआ के फोन क के सही समय बता देब जा।' },
+            
+            // --- Footer ---
+            'footer-privacy': { en: 'Privacy Policy', hi: 'गोपनीयता नीति', bho: 'गोपनीयता के नियम' },
+            'footer-sitemap': { en: 'Sitemap', hi: 'साइटमैप', bho: 'साइटमैप' },
+            'footer-copyright': { en: 'New Dental Clinic. All rights reserved.', hi: 'ब्राइट स्माइल डेंटल क्लिनिक। सभी अधिकार सुरक्षित।', bho: 'ब्राइट स्माइल डेंटल क्लिनिक। सगरी अधिकार सुरक्षित बा।' },
+            
+            // --- Language Select ---
+            'select-lang-text': { en: 'Language', hi: 'भाषा', bho: 'भाषा' },
+            'lang-option-en': { en: 'English', hi: 'अंग्रेज़ी', bho: 'अंग्रेजी' },
+            'lang-option-hi': { en: 'Hindi', hi: 'हिन्दी', bho: 'हिंदी' },
+            'lang-option-bho': { en: 'Bhojpuri', hi: 'भोजपुरी', bho: 'भोजपुरी' },
+        };
+
+        // Function to set the language on the entire page
+        function setLanguage(newLang) {
+            
+            // 1. Translate all elements with data-key attribute
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                const translation = translations[key]?.[newLang];
+
+                if (translation) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        // Handle placeholders
+                        element.setAttribute('placeholder', translation);
+                    } else if (element.tagName === 'OPTION' && element.value !== "") {
+                         // Handle select options (excluding the default 'Select a Service' which is handled in the template)
+                        element.textContent = translation;
+                    } else if (element.id === 'lang-select-desktop' || element.id === 'lang-select-mobile') {
+                        // Skip the language selector itself, handle its options separately if needed.
+                    } else {
+                        // Handle text content (H1, P, LI, Buttons, etc.)
+                        element.textContent = translation;
+                    }
+                }
+            });
+
+            // 2. Handle the complex Hero H1 separately due to the span
+            const h1Element = document.getElementById('hero-h1-text');
+            const spanElement = document.getElementById('hero-h1-span');
+            if (h1Element && spanElement) {
+                h1Element.childNodes[0].nodeValue = translations['hero-h1'][newLang];
+                spanElement.textContent = translations['hero-h1-span'][newLang];
+                h1Element.childNodes[2].nodeValue = translations['hero-h1-suffix'][newLang];
+            }
+            
+            // 3. Update the document language
+            document.documentElement.lang = newLang;
+            
+            // 4. Update the select boxes to reflect the new selection
+            document.getElementById('lang-select-desktop').value = newLang;
+            document.getElementById('lang-select-mobile').value = newLang;
+
+            // 5. Update the global state for the form success message
+            window.currentLang = newLang;
+        }
+
+        // Initialize with default English and set up listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const langSelectDesktop = document.getElementById('lang-select-desktop');
+            const langSelectMobile = document.getElementById('lang-select-mobile');
+            
+            // Initialize global language state
+            window.currentLang = 'en';
+
+            // Set up language change listeners
+            langSelectDesktop.addEventListener('change', (e) => setLanguage(e.target.value));
+            langSelectMobile.addEventListener('change', (e) => setLanguage(e.target.value));
+
+
+            // Mobile menu toggle
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu on link click and smooth scroll
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+
+                    // Hide mobile menu after selection
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Appointment Form Submission Handler
+            const appointmentForm = document.getElementById('appointment-form');
+            const messageBox = document.getElementById('message-box');
+            
+            // --- IMPORTANT: Removed e.preventDefault() for demonstration of Formspree/Backend readiness ---
+            // If you use a service like Formspree, you do NOT prevent the default action. 
+            // The form submits to the action URL.
+            
+            appointmentForm.addEventListener('submit', (e) => {
+                
+                // e.preventDefault(); // NOTE: THIS IS COMMENTED OUT. When deploying, uncomment this ONLY if you are handling submission via AJAX/Fetch API.
+
+                // For the purpose of showing the user a successful submit state on this local preview, we will prevent default and show the message.
+                // When you deploy with Formspree, you will remove this whole block and let Formspree handle the success message/redirect.
+                e.preventDefault(); 
+                
+                // Get form data (for display)
+                const name = document.getElementById('name').value;
+                const serviceElement = document.getElementById('service');
+                const service = serviceElement.options[serviceElement.selectedIndex].textContent;
+
+                let successMsg;
+                const lang = window.currentLang;
+
+                if (lang === 'hi') {
+                    successMsg = `धन्यवाद, ${name}! ${service} अपॉइंटमेंट के लिए आपका अनुरोध प्राप्त हो गया है। हम विवरण की पुष्टि के लिए जल्द ही आपसे संपर्क करेंगे।`;
+                } else if (lang === 'bho') {
+                    successMsg = `धन्यवाद, ${name}! ${service} मुलाकात खातिर राउर निहोरा मिल गइल बा। हमनी जल्दीए राउर से संपर्क करब जा।`;
+                }
+                 else {
+                    successMsg = `Thank you, ${name}! Your request for a ${service} appointment has been received. We will contact you shortly to confirm the details.`;
+                }
+
+
+                // Show success message
+                messageBox.textContent = successMsg;
+                messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+                messageBox.classList.add('bg-primary-green/10', 'text-primary-green');
+                
+                // Clear the form
+                appointmentForm.reset();
+
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 5000);
+            });
+        });
+    </script>
+</head>
+<body class="bg-gray-50 text-dark-text antialiased">
+
+    <!-- 1. Header & Navigation -->
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="#hero" class="text-2xl font-extrabold text-primary-green tracking-tight">
+                    <span class="text-secondary-blue">&#x269C;</span> New Dental Clinic
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-4 text-lg font-medium items-center">
+                    <a href="#services" class="nav-link text-gray-600 transition duration-150" data-key="nav-services">Services</a>
+                    <a href="#about" class="nav-link text-gray-600 transition duration-150" data-key="nav-about">About Us</a>
+                    <a href="#gallery" class="nav-link text-gray-600 transition duration-150" data-key="nav-gallery">Gallery</a>
+                    <!-- <a href="#testimonials" class="nav-link text-gray-600 transition duration-150" data-key="nav-testimonials">Testimonials</a> -->
+                    <a href="#contact" class="nav-link text-gray-600 transition duration-150" data-key="nav-contact">Contact</a>
+                    
+                    <!-- Language Dropdown (Desktop) -->
+                    <div class="flex items-center space-x-2">
+                        <label for="lang-select-desktop" data-key="select-lang-text" class="text-sm font-semibold text-gray-600">Language:</label>
+                        <select id="lang-select-desktop" class="text-sm font-semibold bg-gray-100 text-dark-text hover:bg-gray-200 py-1 px-3 rounded-full transition duration-150 focus:ring-primary-green focus:border-primary-green border-0">
+                            <option value="en" data-key="lang-option-en">English</option>
+                            <option value="hi" data-key="lang-option-hi">हिन्दी</option>
+                            <option value="bho" data-key="lang-option-bho">भोजपुरी</option>
+                        </select>
+                    </div>
+                </nav>
+
+                <!-- Appointment Button (Desktop) -->
+                <a href="#contact" class="hidden md:block bg-primary-green hover:bg-primary-green/80 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md" data-key="nav-book">
+                    Book Now
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-green">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Dropdown) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+            <a href="#services" class="nav-link block px-4 py-2 text-dark-text hover:bg-gray-50" data-key="nav-services">Services</a>
+            <a href="#about" class="nav-link block px-4 py-2 text-dark-text hover:bg-gray-50" data-key="nav-about">About Us</a>
+            <a href="#gallery" class="nav-link block px-4 py-2 text-dark-text hover:bg-gray-50" data-key="nav-gallery">Gallery</a>
+            <!-- <a href="#testimonials" class="nav-link block px-4 py-2 text-dark-text hover:bg-gray-50" data-key="nav-testimonials">Testimonials</a> -->
+            <a href="#contact" class="nav-link block px-4 py-2 text-dark-text hover:bg-gray-50 mb-2" data-key="nav-contact">Contact</a>
+            
+            <!-- Language Dropdown (Mobile) -->
+            <div class="px-4 py-2 flex justify-between items-center border-t border-gray-100">
+                <label for="lang-select-mobile" data-key="select-lang-text" class="text-sm font-semibold text-gray-600">Language:</label>
+                <select id="lang-select-mobile" class="text-sm font-semibold bg-gray-100 text-dark-text hover:bg-gray-200 py-1 px-3 rounded-full transition duration-150 focus:ring-primary-green focus:border-primary-green border-0">
+                    <option value="en" data-key="lang-option-en">English</option>
+                    <option value="hi" data-key="lang-option-hi">हिन्दी</option>
+                    <option value="bho" data-key="lang-option-bho">भोजपुरी</option>
+                </select>
+            </div>
+            
+            <a href="#contact" class="nav-link block mx-4 mb-4 text-center bg-primary-green hover:bg-primary-green/80 text-white font-bold py-2 rounded-lg transition duration-300" data-key="nav-book">Book Now</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Hero Section -->
+        <section id="hero" class="relative bg-white pt-20 pb-28 sm:py-32 overflow-hidden">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+                <!-- Text Content -->
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 id="hero-h1-text" class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight mb-4">
+                        Your Journey to a <span id="hero-h1-span" class="text-primary-green">Brighter Smile</span> Starts Here.
+                    </h1>
+                    <p data-key="hero-p" class="text-xl text-gray-600 mb-8 max-w-lg">
+                        Compassionate care and advanced technology for routine check-ups, cosmetic enhancements, and restorative dentistry.
+                    </p>
+                    <a href="#contact" data-key="hero-button" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-xl shadow-custom text-white bg-primary-green hover:bg-primary-green/90 transition duration-300 transform hover:scale-[1.02]">
+                        Schedule Your First Visit
+                        <svg class="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </div>
+                <!-- Image Placeholder -->
+                <div class="md:w-1/2 flex justify-center">
+                    <!-- Placeholder Image of a dentist and patient -->
+                    <img src="https://placehold.co/600x400/10b981/ffffff?text=Caring+Dental+Team" 
+                         alt="A professional dental team smiling with a patient" 
+                         class="rounded-3xl shadow-2xl object-cover w-full max-w-md lg:max-w-xl transition-all duration-500 hover:shadow-primary-green/40 hover:scale-[1.02] border-4 border-primary-green/20"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/10b981/ffffff?text=Dental+Care+Image'">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Services Section -->
+        <section id="services" class="py-20 sm:py-32 bg-secondary-blue/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 data-key="services-h2" class="text-4xl font-extrabold text-dark-text mb-4">Our Comprehensive Dental Services</h2>
+                <p data-key="services-p" class="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
+                    From preventative care to advanced cosmetic treatments, we cover all your family's oral health needs.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                    <!-- Service Card 1: Preventative -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-primary-green transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                        <div class="text-primary-green mb-4 inline-block p-3 rounded-full bg-primary-green/10">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.21a2 2 0 011.04 2.1L21 21l-7-1.04a2 2 0 01-2-.27l-5-5-2-2-4 4 1-6 2-2 3-3-2-2 3-3 4 4 1-1"></path></svg>
+                        </div>
+                        <h3 data-key="svc1-h3" class="text-2xl font-semibold mb-3 text-dark-text">Preventative Care</h3>
+                        <p data-key="svc1-p" class="text-gray-500">Regular cleanings, comprehensive exams, and fluoride treatments to keep your smile healthy.</p>
+                    </div>
+
+                    <!-- Service Card 2: Cosmetic -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-primary-green transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                        <div class="text-primary-green mb-4 inline-block p-3 rounded-full bg-primary-green/10">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 data-key="svc2-h3" class="text-2xl font-semibold mb-3 text-dark-text">Cosmetic Dentistry</h3>
+                        <p data-key="svc2-p" class="text-gray-500">Teeth whitening, veneers, and bonding to enhance the beauty of your smile.</p>
+                    </div>
+
+                    <!-- Service Card 3: Restorative -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-primary-green transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                        <div class="text-primary-green mb-4 inline-block p-3 rounded-full bg-primary-green/10">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2h2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v2M7 7h10"></path></svg>
+                        </div>
+                        <h3 data-key="svc3-h3" class="text-2xl font-semibold mb-3 text-dark-text">Restorative Dentistry</h3>
+                        <p data-key="svc3-p" class="text-gray-500">Fillings, crowns, bridges, and dental implants to restore function and appearance.</p>
+                    </div>
+
+                    <!-- Service Card 4: Orthodontics -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-primary-green transition duration-300 hover:shadow-2xl hover:scale-[1.02]">
+                        <div class="text-primary-green mb-4 inline-block p-3 rounded-full bg-primary-green/10">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 data-key="svc4-h3" class="text-2xl font-semibold mb-3 text-dark-text">Emergency Care</h3>
+                        <p data-key="svc4-p" class="text-gray-500">We offer prompt care for unexpected issues like toothaches and dental injuries.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4. About Us Section (Meet the Doctor) -->
+        <section id="about" class="py-20 sm:py-32 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col lg:flex-row items-center lg:space-x-12">
+                    <!-- Doctor Image and Info -->
+                    <div class="lg:w-1/3 mb-10 lg:mb-0">
+                        <img src="https://placehold.co/400x500/3b82f6/ffffff?text=Dr.+Ajit" 
+                             alt="Portrait of Dr. Ajit , DDS" 
+                             class="rounded-3xl shadow-xl w-full object-cover border-4 border-secondary-blue/20">
+                        <div class="mt-6 p-4 bg-secondary-blue rounded-xl text-white text-center">
+                            <h3 data-key="doctor-name" class="text-2xl font-bold">Dr. Ajit , DDS</h3>
+                            <p data-key="doctor-role" class="text-lg opacity-90">Lead Dentist & Founder</p>
+                        </div>
+                    </div>
+
+                    <!-- About Text -->
+                    <div class="lg:w-2/3">
+                        <h2 data-key="about-h2" class="text-4xl font-extrabold text-dark-text mb-4">A Practice Built on Trust and Care</h2>
+                        <p data-key="about-p1" class="text-xl text-gray-600 mb-6">
+                            Founded by Dr. Ajit , New Dental is dedicated to creating a comfortable and fear-free dental experience for every patient. We believe in transparency, personalized treatment plans, and using the latest in dental technology.
+                        </p>
+                    
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-center">
+                                <span class="text-primary-green mr-2">&#10003;</span> 
+                                <span data-key="about-li1">Certified in Advanced Cosmetic Procedures</span>
+                            </li>
+                           
+                            <li class="flex items-center">
+                                <span class="text-primary-green mr-2">&#10003;</span> 
+                                <span data-key="about-li3">Focus on Patient Comfort and Sedation Options</span>
+                            </li>
+                        </ul>
+                        <a href="#contact" data-key="about-link" class="mt-8 inline-block text-primary-green font-bold text-lg hover:text-secondary-blue transition duration-150">
+                            Meet the Full Team &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Gallery Section -->
+        <section id="gallery" class="py-20 sm:py-32 bg-secondary-blue/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 data-key="gallery-h2" class="text-4xl font-extrabold text-dark-text mb-4">Our Clinic & Results</h2>
+                <p data-key="gallery-p" class="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
+                    A glimpse into our modern, clean facility and the life-changing results we achieve every day.
+                </p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-8">
+                    <!-- Photo 1: Waiting Area -->
+                    <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                        <img src="https://placehold.co/600x400/1e293b/ffffff?text=Modern+Waiting+Area" alt="Clean and modern clinic waiting area" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-primary-green/30 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center">
+                            <p data-key="gallery-text1" class="text-white text-lg font-semibold">Comfortable Setting</p>
+                        </div>
+                    </div>
+                    <!-- Photo 2: Treatment Room -->
+                    <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                        <img src="https://placehold.co/600x400/059669/ffffff?text=High-Tech+Treatment+Room" alt="High-tech dental treatment room" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-secondary-blue/30 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center">
+                            <p data-key="gallery-text2" class="text-white text-lg font-semibold">Advanced Technology</p>
+                        </div>
+                    </div>
+                    <!-- Photo 3: Before/After Smile -->
+                    <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                        <img src="https://placehold.co/600x400/9333ea/ffffff?text=Cosmetic+Result+Example" alt="Before and after picture of a cosmetic dentistry result" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-primary-green/30 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center">
+                            <p data-key="gallery-text3" class="text-white text-lg font-semibold">Stunning Results</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Testimonials Section -->
+        <!-- <section id="testimonials" class="py-20 sm:py-32 bg-white"> -->
+            <!-- <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 data-key="testimonials-h2" class="text-4xl font-extrabold text-dark-text mb-4">What Our Patients Say</h2>
+                <p data-key="testimonials-p" class="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
+                    Your health and comfort are our top priority. Hear directly from those we've helped.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> -->
+                    <!-- Testimonial 1 -->
+                    <!-- <div class="bg-gray-100 p-8 rounded-xl shadow-lg hover:shadow-primary-green/20 transition duration-300">
+                        <p data-key="test1-text" class="text-lg italic text-gray-700 mb-6">
+                            "The best dental experience I've ever had. Dr. Vance and her team are incredibly professional, gentle, and explained every step of my procedure."
+                        </p>
+                        <p class="font-bold text-dark-text">- Sarah L.</p>
+                        <p class="text-sm text-gray-500">Regular Patient</p>
+                    </div> -->
+                <!-- </div>
+            </div>
+        </section> -->
+
+        <!-- 7. Contact / Appointment Section -->
+        <section id="contact" class="py-20 sm:py-32 bg-secondary-blue/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 data-key="contact-h2" class="text-4xl font-extrabold text-dark-text mb-4">Ready for Your New?</h2>
+                    <p data-key="contact-p" class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Contact us today to schedule your consultation or routine check-up. We look forward to meeting you!
+                    </p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row lg:space-x-12">
+                    
+                    <!-- Contact Information Card -->
+                    <div class="lg:w-1/3 p-8 bg-secondary-blue rounded-2xl text-white shadow-xl mb-10 lg:mb-0">
+                        <h3 data-key="contact-details-h3" class="text-2xl font-bold mb-6 border-b border-secondary-blue/20 pb-2">Clinic Details</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <p class="font-semibold text-secondary-blue/50">Address</p>
+                                <p class="text-lg"><a href="https://maps.app.goo.gl/GqXvHhVi8cwhbrmNA">Chanchaura</a>  <br> Ekma,  Bihar 841224</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-secondary-blue/50">Phone</p>
+                                <p class="text-lg"><a href="tel:7974350754" class="hover:underline"> +91 7974350754</a></p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-secondary-blue/50">Email</p>
+                                <p class="text-lg"><a href="mailto:info@newdentaldental.com" class="hover:underline">info@newdentaldental.com</a></p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-secondary-blue/50">Hours</p>
+                                <p class="text-lg">Mon - Fri: 8:00 AM - 5:00 PM<br>Sat: 9:00 AM - 1:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appointment Form -->
+                    <div class="lg:w-2/3 p-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+                        <h3 data-key="form-h3" class="text-3xl font-bold text-dark-text mb-6">Request an Appointment</h3>
+                        
+                        <!-- Success Message Box -->
+                        <div id="message-box" class="hidden p-4 rounded-xl mb-4 font-medium" role="alert">
+                            <!-- Message content will be inserted by JavaScript -->
+                        </div>
+
+                        <!-- 
+                            *** IMPORTANT FORM UPDATE: ***
+                            Change the 'action' to your Formspree endpoint (e.g., https://formspree.io/f/your_unique_id)
+                            You will also need to change the JavaScript's submission handler when you deploy.
+                        -->
+                        <form id="appointment-form" action="https://formspree.io/f/xwkelpyv" method="POST" class="space-y-6">
+                            
+                            <!-- Name and Phone -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" data-key="form-name-label" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                    <!-- Add 'name' attribute for form submission -->
+                                    <input type="text" id="name" name="Full Name" required placeholder="Jane Doe" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150">
+                                </div>
+                                <div>
+                                    <label for="phone" data-key="form-phone-label" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                     <!-- Add 'name' attribute for form submission -->
+                                    <input type="tel" id="phone" name="Phone Number" required placeholder="Enter Phone Number" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150">
+                                </div>
+                            </div>
+                            
+                            <!-- Email and Service -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="email" data-key="form-email-label" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                     <!-- Add 'name' attribute for form submission -->
+                                    <input type="email" id="email" name="Email" required placeholder="jane.doe@example.com" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150">
+                                </div>
+                                <div>
+                                    <label for="service" data-key="form-service-label" class="block text-sm font-medium text-gray-700 mb-1">Service Requested</label>
+                                     <!-- Add 'name' attribute for form submission -->
+                                    <select id="service" name="Service Requested" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150 bg-white">
+                                        <option value="" data-key="form-option-select">Select a Service</option>
+                                        <option value="Check-up & Cleaning" data-key="form-option-1">Check-up & Cleaning</option>
+                                        <option value="Teeth Whitening" data-key="form-option-2">Teeth Whitening</option>
+                                        <option value="Cosmetic Consultation" data-key="form-option-3">Cosmetic Consultation</option>
+                                        <option value="Emergency Appointment" data-key="form-option-4">Emergency Appointment</option>
+                                        <option value="Other Restorative" data-key="form-option-5">Other Restorative</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Preferred Date/Time -->
+                            <div>
+                                <label for="message" data-key="form-notes-label" class="block text-sm font-medium text-gray-700 mb-1">Preferred Date/Time & Notes</label>
+                                 <!-- Add 'name' attribute for form submission -->
+                                <textarea id="message" name="Notes" rows="4" data-key="form-notes-placeholder" placeholder="Please specify your preferred date, time, and any relevant health notes..." class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-green focus:border-primary-green transition duration-150"></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" data-key="form-submit-button" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-bold rounded-lg shadow-lg text-white bg-secondary-blue hover:bg-secondary-blue/90 transition duration-300 transform hover:scale-[1.01]">
+                                Submit Appointment Request
+                            </button>
+                            <p data-key="form-small-text" class="text-xs text-gray-500 text-center mt-3">We will call you within 24 hours to confirm the exact time.</p>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 8. Footer -->
+    <footer class="bg-dark-text py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
+            <p class="text-xl font-extrabold text-primary-green tracking-wider mb-4">New Dental</p>
+            <p class="mb-3">123 Health Ave, Suite 456, **Patna, Bihar 800001** |+91 7974350754</p>
+            <div class="space-x-4 mb-6">
+                <a href="#" data-key="footer-privacy" class="text-gray-400 hover:text-white transition duration-150">Privacy Policy</a>
+                <span class="text-gray-600">|</span>
+                <a href="#" data-key="footer-sitemap" class="text-gray-400 hover:text-white transition duration-150">Sitemap</a>
+            </div>
+            <p data-key="footer-copyright">&copy; 2025 New Dental Clinic. All rights reserved.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
